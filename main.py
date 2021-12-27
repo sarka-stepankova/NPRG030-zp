@@ -41,18 +41,27 @@ def newGame(matrix):
 # noodle = row/column
 def mergeNoodle(n1,n2,n3,n4):
 # nejdriv zmergeuju, potom posunu na nulovy mista, delam slide k n1 !!!
-# TODO: nejdriv slide na danou stranu, pak zmergeovat a pak zase slide
-    if n1 == n2: 
-        n1 *= 2
-        n2 = 0
-    if n2 == n3: 
-        n2 *= 2
-        n3 = 0
-    if n3 == n4: 
-        n3 *= 2
-        n4 = 0
-
+# TODO: rozdelit opakující se úseky na menší funkce
     noodle = [n1, n2, n3, n4]
+    newNoodle = []
+    counter = 4
+    for num in noodle:
+        if num != 0:
+            newNoodle.append(num)
+            counter -= 1
+    nulls = [0] * counter
+    noodle = newNoodle + nulls
+    
+    if noodle[0] == noodle[1]: 
+        noodle[0] *= 2
+        noodle[1] = 0
+    if noodle[1] == noodle[2]: 
+        noodle[1] *= 2
+        noodle[2] = 0
+    if noodle[2] == noodle[3]: 
+        noodle[2] *= 2
+        noodle[3] = 0
+
     newNoodle = []
     counter = 4
     for num in noodle:
@@ -96,6 +105,6 @@ def right(matrix):
 
 matrix = [[2, 0, 16, 2], [0, 0, 16, 2], [2, 4, 0, 0], [2, 4, 16, 0]]
 #newGame(matrix)
-up(matrix)
+down(matrix)
 
 #print(mergeNoodle(2,2,2,2))
