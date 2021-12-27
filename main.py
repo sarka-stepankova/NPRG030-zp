@@ -41,6 +41,7 @@ def newGame(matrix):
 # noodle = row/column
 def mergeNoodle(n1,n2,n3,n4):
 # nejdriv zmergeuju, potom posunu na nulovy mista, delam slide k n1 !!!
+# TODO: nejdriv slide na danou stranu, pak zmergeovat a pak zase slide
     if n1 == n2: 
         n1 *= 2
         n2 = 0
@@ -62,14 +63,23 @@ def mergeNoodle(n1,n2,n3,n4):
 
     return newNoodle + nulls
 
-# TODO:
-###
 def down(matrix):
-    # na konec funkce
-    newTile(matrix)
+    newMatrix = [[],[],[],[]]
+    for row in range(4):
+        noodle = [mergeNoodle(matrix[3][row],matrix[2][row],matrix[1][row],matrix[0][row])][0][::-1]
+        for j in range(4):
+            newMatrix[j] += [noodle[j]]
+    printBoard(newMatrix)
+    newTile(newMatrix)
 
 def up(matrix):
-    pass
+    newMatrix = [[],[],[],[]]
+    for row in range(4):
+        noodle = mergeNoodle(matrix[0][row],matrix[1][row],matrix[2][row],matrix[3][row])
+        for j in range(4):
+            newMatrix[j] += [noodle[j]]
+    printBoard(newMatrix)
+    newTile(newMatrix)
 
 def left(matrix):
     newMatrix = []
@@ -82,11 +92,10 @@ def right(matrix):
     for row in range(4):
         newNoodle = [mergeNoodle(matrix[row][3],matrix[row][2],matrix[row][1],matrix[row][0])]
         newMatrix += [newNoodle[0][::-1]]
-    print(newMatrix)
     newTile(newMatrix)
 
 matrix = [[2, 0, 16, 2], [0, 0, 16, 2], [2, 4, 0, 0], [2, 4, 16, 0]]
 #newGame(matrix)
-right(matrix)
+up(matrix)
 
 #print(mergeNoodle(2,2,2,2))
