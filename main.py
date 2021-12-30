@@ -13,10 +13,9 @@ def newTile(matrix):
         for column in range(4):
             if matrix[row][column] != 0:
                 counter += 1
+    # osetreni pripadu, kdy je pole plne
     if counter == 16:
-        # TODO: osetrit pripady, kdy se nemuzu hnout, ale existuje move protoze ->
-        print('You lost') # not really... kdyz uz se nemuzu nikam hnout tak jsem prohrala, ne kdyz se zaplni vsechna policka
-        return 
+        return matrix
 
     row = random.randrange(4)
     column = random.randrange(4)
@@ -35,6 +34,28 @@ def newGame(matrix):
     printBoard(matrix)
 
     return matrix
+
+# Check whether you lost or win
+
+def horizontalMoveExists(matrix):
+    for row in range(4):
+        for column in range(3):
+            if matrix[row][column] == matrix[row][column + 1]:
+                return True
+    return False
+
+def verticalMoveExists(matrix):
+    for row in range(3):
+        for column in range(4):
+            if matrix[row][column] == matrix[row + 1][column]:
+                return True
+    return False
+
+def gameOver(matrix):
+    if any(2048 in row for row in matrix):
+        print('You win!')
+    elif not any(0 in row for row in matrix) and not horizontalMoveExists(matrix) and not verticalMoveExists(matrix):
+        print('You lost!')
 
 #####
 
@@ -78,8 +99,8 @@ def down(matrix):
         noodle = [mergeNoodle(matrix[3][row],matrix[2][row],matrix[1][row],matrix[0][row])][0][::-1]
         for j in range(4):
             newMatrix[j] += [noodle[j]]
-    printBoard(newMatrix)
-    newTile(newMatrix)
+    newMatrix = newTile(newMatrix)
+    gameOver(newMatrix)
 
 def up(matrix):
     newMatrix = [[],[],[],[]]
@@ -87,24 +108,27 @@ def up(matrix):
         noodle = mergeNoodle(matrix[0][row],matrix[1][row],matrix[2][row],matrix[3][row])
         for j in range(4):
             newMatrix[j] += [noodle[j]]
-    printBoard(newMatrix)
-    newTile(newMatrix)
+    newMatrix = newTile(newMatrix)
+    gameOver(newMatrix)
 
 def left(matrix):
     newMatrix = []
     for row in range(4):
         newMatrix += [mergeNoodle(matrix[row][0],matrix[row][1],matrix[row][2],matrix[row][3])]
-    newTile(newMatrix)
+    newMatrix = newTile(newMatrix)
+    printBoard(newMatrix)
+    gameOver(newMatrix)
 
 def right(matrix):
     newMatrix = []
     for row in range(4):
         newNoodle = [mergeNoodle(matrix[row][3],matrix[row][2],matrix[row][1],matrix[row][0])]
         newMatrix += [newNoodle[0][::-1]]
-    newTile(newMatrix)
+    newMatrix = newTile(newMatrix)
+    gameOver(newMatrix)
 
-matrix = [[2, 0, 16, 2], [0, 0, 16, 2], [2, 4, 0, 0], [2, 4, 16, 0]]
+matrix = [[2, 4, 8, 16], [16, 8, 4, 2], [2, 4, 32, 16], [16, 32, 4, 4]]
 #newGame(matrix)
-down(matrix)
+left(matrix)
 
 #print(mergeNoodle(2,2,2,2))
