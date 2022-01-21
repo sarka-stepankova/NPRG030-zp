@@ -21,7 +21,12 @@ def newTile(matrix):
     row = random.randrange(4)
     column = random.randrange(4)
     if matrix[row][column] == 0:
-        matrix[row][column] = random.choice([2,4])
+        # 90% chance of the new number being a 2; 10% chance of a 4 (for more authentic experience)
+        chance = random.randint(0,9)
+        if chance < 1:
+            matrix[row][column] = 4
+        else:
+            matrix[row][column] = 2
     else:
         newTile(matrix)
     return matrix
