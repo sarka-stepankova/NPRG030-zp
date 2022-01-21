@@ -1,8 +1,14 @@
+'''
+Hra 2048
+Šárka Štěpánková
+zápočtový program do předmětu Programování I
+'''
+
 import random
 import tkinter as tk
 from tkinter import messagebox
 
-# theme from https://flatuicolors.com
+# colors for tiles background
 colors = {
     '': '#bdc3c7',
     2: '#1abc9c',
@@ -18,7 +24,16 @@ colors = {
     2048: '#e67e22'
 }
 
+def newGame():
+    matrix = [[0] * 4 for _ in range(4)]
+    newTile(matrix)
+    return matrix
+
 def newTile(matrix):
+    '''
+    After every move in game add new tile with number 2 or 4.
+    '''
+    # control for move functions, when there is no space for new number
     counter = 0
     for row in range(4):
         for column in range(4):
@@ -27,6 +42,7 @@ def newTile(matrix):
     if counter == 16:
         return matrix
 
+    # generate random position and new number
     row = random.randrange(4)
     column = random.randrange(4)
     if matrix[row][column] == 0:
@@ -40,13 +56,7 @@ def newTile(matrix):
         newTile(matrix)
     return matrix
 
-def newGame():
-    matrix = [[0] * 4 for _ in range(4)]
-    newTile(matrix)
-    return matrix
-
-# Check whether you lost or win
-
+# Win and lose control functions, main function - gameOver()
 def horizontalMoveExists(matrix):
     for row in range(4):
         for column in range(3):
@@ -70,14 +80,11 @@ def gameOver(matrix):
         messagebox.showinfo('2048', 'You\'ve lost!')
         root.destroy()
 
-#####
-
-# noodle = row/column
 def mergeNoodle(n1,n2,n3,n4):
     '''
     Function that takes 4 numbers from one row/col and does a slide to n1 (with merging). 
+    noodle = row/column
     '''
-    
     # slide to n1 without merging (firstly I need nonzero numbers as close as possible to n1)
     noodle = [n1, n2, n3, n4]
     newNoodle = []
@@ -153,24 +160,10 @@ def updateGUI(matrix):
                 num = ''
             labels[row][col].configure(bg=colors[num], text=str(num))
 
-root = tk.Tk()
-root.title('2048')
-root.geometry('400x370')
-root.resizable(False, False)
-
-messagebox.showinfo("Info","Press -arrow keys- or -w,a,s,d keys- to play the game.")
-
-labels = [[None] * 4 for _ in range(4)]
-
-for row in range(4):
-    for col in range(4):
-        labels[row][col] = tk.Label(root, bg='#bdc3c7', text='', font='Arial 18', fg='white', width=7, height=3)
-        labels[row][col].grid(column=col, row=row, padx=2, pady=2)
-
-matrix = newGame()
-updateGUI(matrix)
-
 def move(event):
+    '''
+    Processes user input and redraws the screen after each move.
+    '''
     global matrix
     if event.char == 'w' or event.keysym == 'Up':
         matrix = up(matrix)
@@ -186,6 +179,21 @@ def move(event):
 
     if event.keysym == 'Escape':
         root.destroy()
+
+root = tk.Tk()
+root.title('2048')
+root.geometry('400x370')
+root.resizable(False, False)
+messagebox.showinfo("Info","Press -arrow keys- or -w,a,s,d keys- to play the game.")
+labels = [[None] * 4 for _ in range(4)]
+
+for row in range(4):
+    for col in range(4):
+        labels[row][col] = tk.Label(root, bg='#bdc3c7', text='', font='Arial 18', fg='white', width=7, height=3)
+        labels[row][col].grid(column=col, row=row, padx=2, pady=2)
+
+matrix = newGame()
+updateGUI(matrix)
 
 root.bind('<Key>', move)
 
